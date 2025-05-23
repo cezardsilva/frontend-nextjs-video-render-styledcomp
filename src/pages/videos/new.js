@@ -2,19 +2,29 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import GlobalStyle from "../GlobalStyle.js";
 
-const FormContainer = styled.div`
-  max-width: 400px;
+const Container = styled.div`
   margin: auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  width: 100vw;
+  
+  h1 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 2rem;
+  }
+`;
+
+const Forms = styled.div`
+margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 400px;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
@@ -22,10 +32,12 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  width: 100%;
+  width: 400px;
   padding: 10px;
   background: #007bff;
   color: #fff;
+  font-size: 16px;
+  font-weight: bold;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -35,27 +47,46 @@ const Button = styled.button`
   }
 `;
 
+const BackToHome = styled.a`
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  text-align: right;
+  margin-right: 20px;
+
+  &:hover {
+    color: #ccc;
+  }
+`;
+
+
 export default function CreateVideo() {
   const router = useRouter();
   const [form, setForm] = useState({ title: "", description: "", link: "", thumbnail: "", duration: "" });
 
   const handleSubmit = async (event) => {
+    console.log('clicou');
     event.preventDefault();
     await axios.post("https://node-api-fvge.onrender.com/videos", form);
     router.push("/");
   };
 
   return (
-    <FormContainer>
-      <h1>Criar Novo Vídeo</h1>
-      <form onSubmit={handleSubmit}>
-        <Input type="text" placeholder="Título" onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        <Input type="text" placeholder="Descrição" onChange={(e) => setForm({ ...form, description: e.target.value })} />
-        <Input type="text" placeholder="Link do vídeo" onChange={(e) => setForm({ ...form, link: e.target.value })} />
-        <Input type="text" placeholder="Imagem Thumbnail" onChange={(e) => setForm({ ...form, thumbnail: e.target.value })} />
-        <Input type="number" placeholder="Duração (segundos)" onChange={(e) => setForm({ ...form, duration: e.target.value })} />
-        <Button type="submit">Criar</Button>
-      </form>
-    </FormContainer>
+    <>
+      <GlobalStyle />
+      <Container>
+        <h1>Criar Novo Vídeo</h1>
+        <BackToHome href="/">✔️ Home</BackToHome>
+        <Forms onSubmit={handleSubmit}>
+          <Input type="text" placeholder="Título" onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <Input type="text" placeholder="Descrição" onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <Input type="text" placeholder="Link do vídeo" onChange={(e) => setForm({ ...form, link: e.target.value })} />
+          <Input type="text" placeholder="Imagem Thumbnail" onChange={(e) => setForm({ ...form, thumbnail: e.target.value })} />
+          <Input type="number" placeholder="Duração (segundos)" onChange={(e) => setForm({ ...form, duration: e.target.value })} />
+          <Button type="submit">Criar</Button>
+        </Forms>
+      </Container>
+    </>
   );
 }
