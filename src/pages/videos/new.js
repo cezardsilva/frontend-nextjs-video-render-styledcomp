@@ -15,7 +15,7 @@ const Container = styled.div`
   }
 `;
 
-const Forms = styled.div`
+const Forms = styled.form`
 margin-top: 50px;
   display: flex;
   align-items: center;
