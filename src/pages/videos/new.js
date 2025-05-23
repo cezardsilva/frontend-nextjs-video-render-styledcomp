@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -62,12 +62,22 @@ const BackToHome = styled.a`
 
 
 export default function CreateVideo() {
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const [form, setForm] = useState({ title: "", description: "", link: "", thumbnail: "", duration: "" });
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Agora verificamos `isClient` dentro do JSX, sem impedir o React de montar os hooks
+  if (!isClient || typeof window === "undefined") {
+    return <h1>Carregando...</h1>; // Substituímos `null` para evitar o erro
+  }
+
   const handleSubmit = async (event) => {
-    event.preventDefault();  // Evita comportamento padrão do form
-    console.log("Enviando dados:", form); // Para verificar se está pegando os valores
+    event.preventDefault();
+    console.log("Enviando dados:", form);
 
     if (!form.title || !form.description || !form.link || !form.thumbnail || !form.duration) {
       alert("Todos os campos são obrigatórios!");
@@ -85,7 +95,6 @@ export default function CreateVideo() {
       alert("Erro ao criar vídeo. Verifique os dados e tente novamente.");
     }
   };
-
 
   return (
     <>
