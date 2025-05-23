@@ -66,11 +66,26 @@ export default function CreateVideo() {
   const [form, setForm] = useState({ title: "", description: "", link: "", thumbnail: "", duration: "" });
 
   const handleSubmit = async (event) => {
-    console.log('clicou');
-    event.preventDefault();
-    await axios.post("https://node-api-fvge.onrender.com/videos", form);
-    router.push("/");
+    event.preventDefault();  // Evita comportamento padrão do form
+    console.log("Enviando dados:", form); // Para verificar se está pegando os valores
+
+    if (!form.title || !form.description || !form.link || !form.thumbnail || !form.duration) {
+      alert("Todos os campos são obrigatórios!");
+      return;
+    }
+
+    try {
+      const response = await axios.post("https://node-api-fvge.onrender.com/videos", form);
+      console.log("Resposta do servidor:", response.data);
+
+      alert("Vídeo criado com sucesso!");
+      router.push("/");
+    } catch (error) {
+      console.error("Erro ao criar vídeo:", error.message);
+      alert("Erro ao criar vídeo. Verifique os dados e tente novamente.");
+    }
   };
+
 
   return (
     <>
